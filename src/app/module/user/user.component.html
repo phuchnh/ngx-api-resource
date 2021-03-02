@@ -1,0 +1,14 @@
+<p *ngIf="isLoading">...Loading</p>
+<form class="flex-column" [formGroup]="userForm" *ngIf="!isLoading" (ngSubmit)="onUpdate$.next()">
+  <label>
+    Email:
+    <input type="text" formControlName="email" />
+  </label>
+  <label>
+    Name:
+    <input type="text" formControlName="name" />
+  </label>
+  <div class="flex-row">
+    <button type="submit" (click)="onUpdate$.next()">Submit</button>
+  </div>
+</form>
