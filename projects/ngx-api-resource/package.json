@@ -7,5 +7,15 @@
   },
   "dependencies": {
     "tslib": "^2.0.0"
-  }
+  },
+  "homepage": "https://github.com/phuchnh/ngx-api-resource",
+  "repository": "https://github.com/phuchnh/ngx-api-resource",
+  "keywords": [
+    "angular",
+    "typescript",
+    "restfull",
+    "api",
+    "resource"
+  ],
+  "license": "MIT"
 }
