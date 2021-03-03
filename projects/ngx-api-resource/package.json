@@ -9,7 +9,10 @@
     "tslib": "^2.0.0"
   },
   "homepage": "https://github.com/phuchnh/ngx-api-resource",
-  "repository": "https://github.com/phuchnh/ngx-api-resource",
+  "repository": "git@github.com:phuchnh/ngx-api-resource.git",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "keywords": [
     "angular",
     "typescript",
