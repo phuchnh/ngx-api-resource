@@ -21,12 +21,12 @@ export interface ResourceContract<T = any> {
   store(body): Observable<T>;
 
   /**
-   * Updates a resource.
+   * Fetches a resource.
    */
   show(id: ResourceId): Observable<T>;
 
   /**
-   * Fetches a resource.
+   * Updates a resource.
    */
   update(id: ResourceId, body: any): Observable<T>;
 

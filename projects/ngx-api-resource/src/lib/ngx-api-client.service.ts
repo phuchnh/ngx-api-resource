@@ -3,14 +3,6 @@ import { HttpClient, HttpResponse } from '@angular/common/http';
 import { NGX_API_RESOURCE, NgxApiResourceConfig } from './ngx-api-resource.module';
 import { Observable } from 'rxjs';
 
-function withJson(options = {}): any {
-  return {
-    ...options,
-    observe: 'response',
-    responseType: 'json'
-  };
-}
-
 @Injectable({
   providedIn: 'root',
   deps: [HttpClient]

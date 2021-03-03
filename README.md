@@ -1,27 +1,97 @@
-# AngularRestfulApi
+# ngx-api-resource
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.1.2.
+## Getting started
 
-## Development server
+### Installation
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+To install the package from npm - run `npm install ngx-api-resource`
 
-## Code scaffolding
+### Setup
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```typescript
+import { NgxApiResourceModule } from 'ngx-api-resource';
 
-## Build
+@NgModule({
+  imports: [
+    ...
+    NgxApiResourceModule.forRoot({
+      baseUrl: 'http://l8-api.test/',
+      prefix: '/api'
+    })
+  ],
+})
+export class AppModule {}
+```
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+### Usage
 
-## Running unit tests
+| Verb      	| URI           	| Method  	| Summary                        	|
+|-----------	|---------------	|---------	|--------------------------------	|
+| GET       	| /users        	| index   	| Fetches the list of resources. 	|
+| POST      	| /users        	| store   	| Creates new resources.         	|
+| GET       	| /users/{user} 	| show    	| Fetches a resource.            	|
+| PUT/PATCH 	| /users/{user} 	| update  	| Updates a resource.            	|
+| DELETE    	| /users/{user} 	| destroy 	| Deletes a resource.            	|
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+### Create service
 
-## Running end-to-end tests
+```typescript
+import { NgxApiResourceService } from 'ngx-api-resource';
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+export interface UserResource {
+  id: number;
+  name: string;
+  email: string;
+  email_verified_at: string;
+  created_at: string;
+  updated_at: string;
+}
 
-## Further help
+@Injectable({ providedIn: 'root' })
+export class UserResourceService extends NgxApiResourceService<UserResource> {
+  protected model = 'users'; // prefix url
+}
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+```
+
+Create component and inject service
+
+```typescript
+import { UserResource, UserResourceService } from './user-resource.service';
+import { CollectionResource } from 'ngx-api-resource';
+
+@Component({
+  selector: 'users',
+  templateUrl: './users.component.html',
+  styleUrls: ['./users.component.scss']
+})
+export class UsersComponent implements OnInit {
+  constructor(private userResourceService: UserResourceService) {}
+
+  // Fetches the list of resources.
+  index(): Observable<CollectionResource<UserResource>> {
+    return this.userResourceService.index()
+  }
+
+  // Creates new resources.
+  store(attributes: any): Observable<UserResource> {
+    return this.userResourceService.store(attributes)
+  }
+
+  // Fetches a resource.
+  show(id: string|number): Observable<UserResource> {
+    return this.userResourceService.show(id)
+  }
+
+  // Updates a resource.
+  update(id: string|number, attributes: any): Observable<UserResource> {
+    return this.userResourceService.update(id,attributes)
+  }
+
+  // Deletes a resource.
+  delete(id: string|number): Observable<HttpResponse<any>> {
+    return this.userResourceService.destroy(id)
+  }
+}
+
+```
