@@ -12,14 +12,22 @@ import { CollectionResource, ResourceContract, ResourceId } from './ngx-api-reso
 export abstract class NgxApiResourceService<T = any> implements ResourceContract<T> {
   protected abstract model: string;
 
-  protected constructor(@Inject(NgxApiClient) private ngxApiClient: NgxApiClient) {}
+  protected constructor(@Inject(NgxApiClient) protected ngxApiClient: NgxApiClient) {}
 
-  protected resolveResource(resp: HttpResponse<any>): T {
+  protected resolveResourceResponse(resp: HttpResponse<any>): T {
     return resp.body.data;
   }
 
-  protected resolveCollectionResource(resp: HttpResponse<any>): CollectionResource<T> {
-    return resp.body;
+  protected resolveCollectionResponse(resp: HttpResponse<any>): CollectionResource<T> {
+    const headers = resp.headers.keys().reduce((acc, val) => {
+      acc[val] = resp.headers.get(val);
+      return acc;
+    }, {});
+
+    return {
+      ...resp.body,
+      headers
+    };
   }
 
   protected resolveModel(): string {
@@ -33,26 +41,27 @@ export abstract class NgxApiResourceService<T = any> implements ResourceContract
     return `/${this.resolveModel()}/${id}`;
   }
 
-  index(): Observable<CollectionResource<T>> {
+
+  index(query?: any): Observable<CollectionResource<T>> {
     return this.ngxApiClient
       .get(this.resolveUrl())
-      .pipe(map(resp => this.resolveCollectionResource(resp)));
+      .pipe(map(resp => this.resolveCollectionResponse(resp)));
   }
 
   store(body = {}): Observable<T> {
     return this.ngxApiClient
       .post(this.resolveUrl(), body)
-      .pipe(map(resp => this.resolveResource(resp)));
+      .pipe(map(resp => this.resolveResourceResponse(resp)));
   }
 
   show(id: ResourceId): Observable<T> {
-    return this.ngxApiClient.get(this.resolveUrl(id)).pipe(map(resp => this.resolveResource(resp)));
+    return this.ngxApiClient.get(this.resolveUrl(id)).pipe(map(resp => this.resolveResourceResponse(resp)));
   }
 
   update(id: ResourceId, body = {}): Observable<T> {
     return this.ngxApiClient
       .put(this.resolveUrl(id), body)
-      .pipe(map(resp => this.resolveResource(resp)));
+      .pipe(map(resp => this.resolveResourceResponse(resp)));
   }
 
   destroy(id: ResourceId): Observable<HttpResponse<any>> {

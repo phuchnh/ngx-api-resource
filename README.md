@@ -25,15 +25,7 @@ export class AppModule {}
 
 ### Usage
 
-| Verb      	| URI           	| Method  	| Summary                        	|
-|-----------	|---------------	|---------	|--------------------------------	|
-| GET       	| /users        	| index   	| Fetches the list of resources. 	|
-| POST      	| /users        	| store   	| Creates new resources.         	|
-| GET       	| /users/{user} 	| show    	| Fetches a resource.            	|
-| PUT/PATCH 	| /users/{user} 	| update  	| Updates a resource.            	|
-| DELETE    	| /users/{user} 	| destroy 	| Deletes a resource.            	|
-
-### Create service
+1. Define service
 
 ```typescript
 import { NgxApiResourceService } from 'ngx-api-resource';
@@ -54,7 +46,31 @@ export class UserResourceService extends NgxApiResourceService<UserResource> {
 
 ```
 
-Create component and inject service
+Default NgxApiResourceService already implement all method bellow:
+
+| Verb      	| URI           	| Method  	| Summary                        	|
+|-----------	|---------------	|---------	|--------------------------------	|
+| GET       	| /users        	| index   	| Fetches the list of resources. 	|
+| POST      	| /users        	| store   	| Creates new resources.         	|
+| GET       	| /users/{user} 	| show    	| Fetches a resource.            	|
+| PUT/PATCH 	| /users/{user} 	| update  	| Updates a resource.            	|
+| DELETE    	| /users/{user} 	| destroy 	| Deletes a resource.            	|
+
+To define a custom method
+
+```typescript
+@Injectable({ providedIn: 'root' })
+export class UserResourceService extends NgxApiResourceService<UserResource> {
+  protected model = 'users'; // prefix url
+
+  approve(userId: string | number): Observable<HttpResponse<any>> {
+    return this.ngxApiClient.post(`/${this.model}/${userId}/approve`);
+  }
+}
+```
+
+
+2. Define component and inject service
 
 ```typescript
 import { UserResource, UserResourceService } from './user-resource.service';
@@ -91,6 +107,11 @@ export class UsersComponent implements OnInit {
   // Deletes a resource.
   delete(id: string|number): Observable<HttpResponse<any>> {
     return this.userResourceService.destroy(id)
+  }
+
+  // Approve user
+  approve(id: string|number): Observable<HttpResponse<any>> {
+    return this.userResourceService.approve(id)
   }
 }
 

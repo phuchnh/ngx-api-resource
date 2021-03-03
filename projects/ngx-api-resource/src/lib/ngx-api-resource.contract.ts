@@ -13,7 +13,7 @@ export interface ResourceContract<T = any> {
   /**
    * Fetches the list of resources.
    */
-  index(): Observable<CollectionResource<T>>;
+  index(query: any): Observable<CollectionResource<T>>;
 
   /**
    * Creates new resources.
