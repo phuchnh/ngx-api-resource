@@ -38,11 +38,11 @@ export interface ApiQueryContract {
 @Injectable()
 export class NgxApiQuery implements ApiQueryContract {
   protected filters: any = {};
-  protected paginates: any = {};
+  protected paging: any = {};
   protected sorts: any = {};
   protected includes: string[] = [];
 
-  with(relations: string | string[]): NgxApiQuery {
+  with(...relations: string[]): NgxApiQuery {
     this.includes.push(...relations);
     return this;
   }
@@ -63,8 +63,8 @@ export class NgxApiQuery implements ApiQueryContract {
   }
 
   paginate(pageNumber: number, pageSize = 10): NgxApiQuery {
-    this.paginates['page'] = pageNumber;
-    this.paginates['size'] = pageSize;
+    this.paging['page'] = pageNumber;
+    this.paging['size'] = pageSize;
     return this;
   }
 
@@ -80,9 +80,9 @@ export class NgxApiQuery implements ApiQueryContract {
         params.filter[property] = this.filters[property];
       }
     }
-    for (const property in this.paginates) {
-      if (this.paginates.hasOwnProperty(property)) {
-        params.page[property] = this.paginates[property];
+    for (const property in this.paging) {
+      if (this.paging.hasOwnProperty(property)) {
+        params.page[property] = this.paging[property];
       }
     }
     for (const property in this.sorts) {
@@ -90,13 +90,13 @@ export class NgxApiQuery implements ApiQueryContract {
         params.sort[property] = this.sorts[property];
       }
     }
-    console.log(params);
+
     return serialize(params);
   }
 
   clear(): ApiQueryContract {
     this.filters = {};
-    this.paginates = {};
+    this.paging = {};
     this.sorts = {};
     this.includes = [];
     return this;

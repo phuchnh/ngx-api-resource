@@ -19,7 +19,8 @@ export class UsersComponent implements OnInit {
 
   constructor(
     private ngxApiQuery: NgxApiQuery,
-    private userResourceService: UserResourceService) {}
+    private userResourceService: UserResourceService) {
+  }
 
   ngOnInit(): void {
     this.nameControl = new FormControl('');
@@ -33,13 +34,12 @@ export class UsersComponent implements OnInit {
       switchMap(() => {
 
         this.ngxApiQuery
+          .with('posts', 'author')
           .where('name', this.nameControl.value)
           .where('email', this.emailControl.value)
           .orderBy('name', Direction.DESC);
 
-        return this.userResourceService.index(this.ngxApiQuery).pipe(
-          catchError(err => EMPTY)
-        );
+        return this.userResourceService.index(this.ngxApiQuery).pipe(catchError(() => EMPTY));
       })
     );
   }
