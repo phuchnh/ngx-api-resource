@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { combineLatest, EMPTY, Observable, Subject } from 'rxjs';
 import { UserResource, UserResourceService } from '@data/user-resource.service';
-import { CollectionResource } from 'ngx-api-resource';
+import { CollectionResource, Direction, NgxApiQuery } from 'ngx-api-resource';
+import { FormControl } from '@angular/forms';
+import { catchError, startWith, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-users',
@@ -10,10 +12,35 @@ import { CollectionResource } from 'ngx-api-resource';
 })
 export class UsersComponent implements OnInit {
   users$: Observable<CollectionResource<UserResource>>;
+  onSearch$ = new Subject<any>();
 
-  constructor(private userResourceService: UserResourceService) {}
+  nameControl: FormControl;
+  emailControl: FormControl;
+
+  constructor(
+    private ngxApiQuery: NgxApiQuery,
+    private userResourceService: UserResourceService) {}
 
   ngOnInit(): void {
-    this.users$ = this.userResourceService.index();
+    this.nameControl = new FormControl('');
+    this.emailControl = new FormControl('');
+
+    const source$ = [
+      this.onSearch$.pipe(startWith(undefined as void))
+    ];
+
+    this.users$ = combineLatest(source$).pipe(
+      switchMap(() => {
+
+        this.ngxApiQuery
+          .where('name', this.nameControl.value)
+          .where('email', this.emailControl.value)
+          .orderBy('name', Direction.DESC);
+
+        return this.userResourceService.index(this.ngxApiQuery).pipe(
+          catchError(err => EMPTY)
+        );
+      })
+    );
   }
 }

@@ -1,5 +1,5 @@
 import { InjectionToken, ModuleWithProviders, NgModule } from '@angular/core';
-import { NgxApiResourceComponent } from './ngx-api-resource.component';
+import { NgxApiQuery } from './ngx-api-query';
 
 export interface NgxApiResourceConfig {
   baseUrl: string;
@@ -9,9 +9,10 @@ export interface NgxApiResourceConfig {
 export const NGX_API_RESOURCE = new InjectionToken<NgxApiResourceConfig>('NgxApiResourceConfig');
 
 @NgModule({
-  declarations: [NgxApiResourceComponent],
+  declarations: [],
   imports: [],
-  exports: [NgxApiResourceComponent]
+  exports: [],
+  providers: [NgxApiQuery]
 })
 export class NgxApiResourceModule {
   static forRoot(config: NgxApiResourceConfig): ModuleWithProviders<NgxApiResourceModule> {

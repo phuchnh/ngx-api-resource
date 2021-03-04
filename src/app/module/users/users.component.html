@@ -1,3 +1,14 @@
+<form>
+  <label>
+    Name
+    <input type="search" [formControl]="nameControl">
+  </label>
+  <label>
+    Email
+    <input type="search" [formControl]="emailControl">
+  </label>
+  <button type="button" (click)="onSearch$.next()">Search</button>
+</form>
 <dl *ngFor="let item of (users$ | async)?.data">
   <dt>
     {{ item.id }} - <a [routerLink]="['/users', item.id]">{{ item.name }}</a>

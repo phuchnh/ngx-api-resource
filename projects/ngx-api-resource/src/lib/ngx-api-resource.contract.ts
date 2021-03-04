@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
+import { ApiQueryContract } from './ngx-api-query';
 
 export type ResourceId = string | number;
 
@@ -13,12 +14,17 @@ export interface ResourceContract<T = any> {
   /**
    * Fetches the list of resources.
    */
-  index(query: any): Observable<CollectionResource<T>>;
+  index(query?: ApiQueryContract): Observable<CollectionResource<T>>;
 
   /**
    * Creates new resources.
    */
-  store(body): Observable<T>;
+  store(payload: any): Observable<T>;
+
+  /**
+   * Batch creates the list of resources.
+   */
+  batchStore(payload: any[]): Observable<HttpResponse<any>>;
 
   /**
    * Fetches a resource.
@@ -28,7 +34,12 @@ export interface ResourceContract<T = any> {
   /**
    * Updates a resource.
    */
-  update(id: ResourceId, body: any): Observable<T>;
+  update(id: ResourceId, payload: any): Observable<T>;
+
+  /**
+   * Batch updates the list of resources.
+   */
+  batchUpdate(payload: any[], primaryKey?: string): Observable<HttpResponse<any>>;
 
   /**
    * Deletes a resource.
