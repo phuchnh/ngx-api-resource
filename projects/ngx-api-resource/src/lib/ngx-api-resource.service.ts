@@ -7,18 +7,15 @@ import { CollectionResource, ResourceContract, ResourceId } from './ngx-api-reso
 import { ApiQueryContract } from './ngx-api-query';
 import { NgxApiResponse } from './ngx-api-response';
 
-@Injectable({
-  providedIn: 'root',
-  deps: [NgxApiClient]
-})
+@Injectable()
 export abstract class NgxApiResourceService<T = any> implements ResourceContract<T> {
   protected abstract model: string;
 
   protected resources = 'resources';
 
   protected constructor(
-    @Inject(NgxApiClient) protected ngxApiClient: NgxApiClient,
-    @Inject(NgxApiResponse) protected ngxApiResponse: NgxApiResponse<T>
+    protected ngxApiClient: NgxApiClient,
+    protected ngxApiResponse: NgxApiResponse<T>
   ) {}
 
   protected resolveModel(): string {

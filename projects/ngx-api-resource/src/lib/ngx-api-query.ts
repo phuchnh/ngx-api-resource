@@ -18,7 +18,7 @@ export enum Direction {
 }
 
 export interface ApiQueryContract {
-  with(relation: string): ApiQueryContract;
+  with(...relation: string[]): ApiQueryContract;
 
   where(field: string, value: string): ApiQueryContract;
 
