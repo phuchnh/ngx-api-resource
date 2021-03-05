@@ -29,7 +29,7 @@ export interface ResourceContract<T = any> {
   /**
    * Fetches a resource.
    */
-  show(id: ResourceId): Observable<T>;
+  show(id: ResourceId, query?: ApiQueryContract): Observable<T>;
 
   /**
    * Updates a resource.

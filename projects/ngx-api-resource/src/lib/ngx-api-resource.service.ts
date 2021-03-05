@@ -15,8 +15,7 @@ export abstract class NgxApiResourceService<T = any> implements ResourceContract
 
   protected resources = 'resources';
 
-  protected constructor(@Inject(NgxApiClient) protected ngxApiClient: NgxApiClient) {
-  }
+  protected constructor(@Inject(NgxApiClient) protected ngxApiClient: NgxApiClient) {}
 
   protected resolveResourceResponse(resp: HttpResponse<any>): T {
     return resp.body.data;
@@ -63,8 +62,10 @@ export abstract class NgxApiResourceService<T = any> implements ResourceContract
     });
   }
 
-  show(id: ResourceId): Observable<T> {
-    return this.ngxApiClient.get(this.resolveUrl(id)).pipe(map(resp => this.resolveResourceResponse(resp)));
+  show(id: ResourceId, query?: ApiQueryContract): Observable<T> {
+    return this.ngxApiClient
+      .get(this.resolveUrl(id), query.apply())
+      .pipe(map(resp => this.resolveResourceResponse(resp)));
   }
 
   update(id: ResourceId, payload = {}): Observable<T> {

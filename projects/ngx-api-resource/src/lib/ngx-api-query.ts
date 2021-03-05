@@ -12,13 +12,11 @@ function serialize(obj: any, prefix?: string): any {
   return params;
 }
 
-
 export enum Direction {
   ASC = 'asc',
-  DESC = 'desc',
+  DESC = 'desc'
 }
 
-// @ts-ignore
 export interface ApiQueryContract {
   with(relation: string): ApiQueryContract;
 
@@ -37,9 +35,9 @@ export interface ApiQueryContract {
 
 @Injectable()
 export class NgxApiQuery implements ApiQueryContract {
-  protected filters: any = {};
-  protected paging: any = {};
-  protected sorts: any = {};
+  protected filters = new Map();
+  protected paging = new Map();
+  protected sorts = new Map();
   protected includes = new Set<string>();
 
   with(...relations: string[]): NgxApiQuery {
@@ -48,58 +46,48 @@ export class NgxApiQuery implements ApiQueryContract {
   }
 
   where(field: string, value: string, operator = '='): NgxApiQuery {
-    this.filters[field] = value.trim();
+    this.filters.set(field, value);
     return this;
   }
 
   whereIn(field: string, value: string[]): NgxApiQuery {
-    this.filters[field] = value.join(',').trim();
+    this.filters.set(field, value.join(',').trim());
     return this;
   }
 
   orderBy(field: string, direction: Direction): NgxApiQuery {
-    this.sorts[field] = direction;
+    this.sorts.set(field, direction);
     return this;
   }
 
   paginate(pageNumber: number, pageSize = 10): NgxApiQuery {
-    this.paging['page'] = pageNumber;
-    this.paging['size'] = pageSize;
+    this.paging.set('number', pageNumber);
+    this.paging.set('size', pageSize);
     return this;
   }
 
-  apply(): { [key: string]: any; } {
-    const params: any = {};
-    params.filter = {};
-    params.sort = {};
-    params.page = {};
-    params.include = [...this.includes].join(',');
+  // @ts-ignore
+  private mapToPlainObject(map: Map): any {
+    return Array.from(map).reduce((obj, [key, value]) => {
+      return Object.assign(obj, { [key]: value });
+    }, {});
+  }
 
-    for (const property in this.filters) {
-      if (this.filters.hasOwnProperty(property)) {
-        params.filter[property] = this.filters[property];
-      }
-    }
-    for (const property in this.paging) {
-      if (this.paging.hasOwnProperty(property)) {
-        params.page[property] = this.paging[property];
-      }
-    }
-    for (const property in this.sorts) {
-      if (this.sorts.hasOwnProperty(property)) {
-        params.sort[property] = this.sorts[property];
-      }
-    }
+  apply(): { [key: string]: any } {
+    const params: any = {};
+    params.filter = this.mapToPlainObject(this.filters);
+    params.sort = this.mapToPlainObject(this.sorts);
+    params.page = this.mapToPlainObject(this.paging);
+    params.include = [...this.includes].join(',');
 
     return serialize(params);
   }
 
   clear(): ApiQueryContract {
-    this.filters = {};
-    this.paging = {};
-    this.sorts = {};
+    this.filters.clear();
+    this.paging.clear();
+    this.sorts.clear();
     this.includes.clear();
     return this;
   }
-
 }

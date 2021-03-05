@@ -37,6 +37,7 @@ export class UsersComponent implements OnInit {
           .with('posts', 'author')
           .where('name', this.nameControl.value)
           .where('email', this.emailControl.value)
+          .paginate(1, 20)
           .orderBy('name', Direction.DESC);
 
         return this.userResourceService.index(this.ngxApiQuery).pipe(catchError(() => EMPTY));
