@@ -17,28 +17,22 @@ export class UsersComponent implements OnInit {
   nameControl: FormControl;
   emailControl: FormControl;
 
-  constructor(
-    private ngxApiQuery: NgxApiQuery,
-    private userResourceService: UserResourceService) {
-  }
+  constructor(private ngxApiQuery: NgxApiQuery, private userResourceService: UserResourceService) {}
 
   ngOnInit(): void {
     this.nameControl = new FormControl('');
     this.emailControl = new FormControl('');
 
-    const source$ = [
-      this.onSearch$.pipe(startWith(undefined as void))
-    ];
+    const source$ = [this.onSearch$.pipe(startWith(undefined as void))];
 
     this.users$ = combineLatest(source$).pipe(
       switchMap(() => {
-
-        this.ngxApiQuery
-          .with('posts', 'author')
-          .where('name', this.nameControl.value)
-          .where('email', this.emailControl.value)
-          .paginate(1, 20)
-          .orderBy('name', Direction.DESC);
+        // this.ngxApiQuery
+        //   .with('posts', 'author')
+        //   .where('name', this.nameControl.value)
+        //   .where('email', this.emailControl.value)
+        //   .paginate(1, 20)
+        //   .orderBy('name', Direction.DESC);
 
         return this.userResourceService.index(this.ngxApiQuery).pipe(catchError(() => EMPTY));
       })
