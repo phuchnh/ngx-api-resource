@@ -1,10 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { CollectionResource } from './ngx-api-resource.contract';
-
-export interface ApiResponseContract<T = any> {
-  transform(response: HttpResponse<any>): CollectionResource<T> | T;
-}
+import { CollectionResource, ApiResponseContract } from './ngx-api-resource.contract';
 
 @Injectable()
 export class NgxApiResponse<T = any> implements ApiResponseContract<T> {

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { combineLatest, EMPTY, Observable, Subject } from 'rxjs';
 import { UserResource, UserResourceService } from '@data/user-resource.service';
-import { CollectionResource, Direction, NgxApiQuery } from 'ngx-api-resource';
+import { CollectionResource, Directions, NgxApiQuery } from 'ngx-api-resource';
 import { FormControl } from '@angular/forms';
 import { catchError, startWith, switchMap } from 'rxjs/operators';
 
@@ -27,12 +27,12 @@ export class UsersComponent implements OnInit {
 
     this.users$ = combineLatest(source$).pipe(
       switchMap(() => {
-        // this.ngxApiQuery
-        //   .with('posts', 'author')
-        //   .where('name', this.nameControl.value)
-        //   .where('email', this.emailControl.value)
-        //   .paginate(1, 20)
-        //   .orderBy('name', Direction.DESC);
+        this.ngxApiQuery
+          // .with('posts', 'author')
+          // .where('name', this.nameControl.value)
+          // .where('email', this.emailControl.value)
+          .paginate(1, 20);
+        // .orderBy('name', Directions.DESC);
 
         return this.userResourceService.index(this.ngxApiQuery).pipe(catchError(() => EMPTY));
       })

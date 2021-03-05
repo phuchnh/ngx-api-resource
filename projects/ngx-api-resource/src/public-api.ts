@@ -7,3 +7,4 @@ export * from './lib/ngx-api-resource.service';
 export * from './lib/ngx-api-query';
 export * from './lib/ngx-api-resource.module';
 export * from './lib/ngx-api-response';
+export * from './lib/enums';

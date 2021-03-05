@@ -10,9 +10,6 @@ export interface NgxApiResourceConfig {
 export const NGX_API_RESOURCE = new InjectionToken<NgxApiResourceConfig>('NgxApiResourceConfig');
 
 @NgModule({
-  declarations: [],
-  imports: [],
-  exports: [],
   providers: [NgxApiQuery, NgxApiResponse]
 })
 export class NgxApiResourceModule {

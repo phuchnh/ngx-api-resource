@@ -3,18 +3,24 @@ import { Observable } from 'rxjs';
 import { NgxApiClient } from './ngx-api-client.service';
 import { map } from 'rxjs/operators';
 import { HttpResponse } from '@angular/common/http';
-import { CollectionResource, ResourceContract, ResourceId } from './ngx-api-resource.contract';
-import { ApiQueryContract } from './ngx-api-query';
+import {
+  ApiQueryContract,
+  CollectionResource,
+  ResourceContract,
+  ResourceId
+} from './ngx-api-resource.contract';
 import { NgxApiResponse } from './ngx-api-response';
 
 @Injectable()
 export abstract class NgxApiResourceService<T = any> implements ResourceContract<T> {
   protected abstract model: string;
 
+  protected relation: string;
+
   protected resources = 'resources';
 
   protected constructor(
-    protected ngxApiClient: NgxApiClient,
+    @Inject(NgxApiClient) protected ngxApiClient: NgxApiClient,
     protected ngxApiResponse: NgxApiResponse<T>
   ) {}
 
@@ -23,10 +29,7 @@ export abstract class NgxApiResourceService<T = any> implements ResourceContract
   }
 
   protected resolveUrl(id?: ResourceId): string {
-    if (!id) {
-      return `/${this.resolveModel()}`;
-    }
-    return `/${this.resolveModel()}/${id}`;
+    return !id ? `/${this.resolveModel()}` : `/${this.resolveModel()}/${id}`;
   }
 
   index(query?: ApiQueryContract): Observable<CollectionResource<T>> {

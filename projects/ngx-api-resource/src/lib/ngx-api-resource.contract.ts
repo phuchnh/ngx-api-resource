@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 import { HttpResponse } from '@angular/common/http';
-import { ApiQueryContract } from './ngx-api-query';
+import { Directions } from './enums';
 
 export type ResourceId = string | number;
 
@@ -45,4 +45,45 @@ export interface ResourceContract<T = any> {
    * Deletes a resource.
    */
   destroy(id: ResourceId): Observable<HttpResponse<any>>;
+}
+
+export interface ApiQueryContract {
+  /**
+   * Append relation params
+   */
+  with(...relation: string[]): ApiQueryContract;
+
+  /**
+   * Add filters params
+   */
+  where(field: string, value: string): ApiQueryContract;
+
+  /**
+   * Add filters with multiple values
+   */
+  whereIn(field: string, value: string[]): ApiQueryContract;
+
+  /**
+   * Append pagination params
+   */
+  paginate(pageNumber: number, pageSize: number): ApiQueryContract;
+
+  /**
+   * Append sorts params
+   */
+  orderBy(field: string, direction: Directions): ApiQueryContract;
+
+  /**
+   * Execute
+   */
+  apply(): { [key: string]: any };
+
+  /**
+   * Reset params
+   */
+  clear(): ApiQueryContract;
+}
+
+export interface ApiResponseContract<T = any> {
+  transform(response: HttpResponse<any>): CollectionResource<T> | T;
 }

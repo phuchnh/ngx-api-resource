@@ -1,37 +1,7 @@
 import { Injectable } from '@angular/core';
-
-function serialize(obj: any, prefix?: string): any {
-  const params = {};
-  for (const p in obj) {
-    if (obj.hasOwnProperty(p)) {
-      const k = prefix ? prefix + '[' + p + ']' : p;
-      const v = obj[p];
-      Object.assign(params, v !== null && typeof v === 'object' ? serialize(v, k) : { [k]: v });
-    }
-  }
-  return params;
-}
-
-export enum Direction {
-  ASC = 'asc',
-  DESC = 'desc'
-}
-
-export interface ApiQueryContract {
-  with(...relation: string[]): ApiQueryContract;
-
-  where(field: string, value: string): ApiQueryContract;
-
-  whereIn(field: string, value: string[]): ApiQueryContract;
-
-  paginate(pageNumber: number, pageSize: number): ApiQueryContract;
-
-  orderBy(field: string, direction: Direction): ApiQueryContract;
-
-  apply(): { [key: string]: any };
-
-  clear(): ApiQueryContract;
-}
+import { Directions } from './enums';
+import { serialize } from './helpers';
+import { ApiQueryContract } from './ngx-api-resource.contract';
 
 @Injectable()
 export class NgxApiQuery implements ApiQueryContract {
@@ -55,7 +25,7 @@ export class NgxApiQuery implements ApiQueryContract {
     return this;
   }
 
-  orderBy(field: string, direction: Direction): NgxApiQuery {
+  orderBy(field: string, direction: Directions): NgxApiQuery {
     this.sorts.set(field, direction);
     return this;
   }

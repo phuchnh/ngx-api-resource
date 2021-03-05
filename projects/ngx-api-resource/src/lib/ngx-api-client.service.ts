@@ -4,8 +4,7 @@ import { NGX_API_RESOURCE, NgxApiResourceConfig } from './ngx-api-resource.modul
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
-  deps: [HttpClient]
+  providedIn: 'root'
 })
 export class NgxApiClient {
   private readonly baseUrl!: string;
