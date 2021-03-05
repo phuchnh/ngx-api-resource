@@ -40,10 +40,10 @@ export class NgxApiQuery implements ApiQueryContract {
   protected filters: any = {};
   protected paging: any = {};
   protected sorts: any = {};
-  protected includes: string[] = [];
+  protected includes = new Set<string>();
 
   with(...relations: string[]): NgxApiQuery {
-    this.includes.push(...relations);
+    relations.forEach(val => this.includes.add(val));
     return this;
   }
 
@@ -73,7 +73,7 @@ export class NgxApiQuery implements ApiQueryContract {
     params.filter = {};
     params.sort = {};
     params.page = {};
-    params.include = this.includes.join(',');
+    params.include = [...this.includes].join(',');
 
     for (const property in this.filters) {
       if (this.filters.hasOwnProperty(property)) {
@@ -98,7 +98,7 @@ export class NgxApiQuery implements ApiQueryContract {
     this.filters = {};
     this.paging = {};
     this.sorts = {};
-    this.includes = [];
+    this.includes.clear();
     return this;
   }
 
