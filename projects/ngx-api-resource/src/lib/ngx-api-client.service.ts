@@ -13,7 +13,7 @@ export class NgxApiClient {
 
   constructor(@Inject(NGX_API_RESOURCE) config: NgxApiResourceConfig, private client: HttpClient) {
     this.baseUrl = config.baseUrl;
-    this.prefix = config.prefix || '/api';
+    this.prefix = config.prefix;
   }
 
   private buildUrl(path: string): string {
