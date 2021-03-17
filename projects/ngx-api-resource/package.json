@@ -10,9 +10,6 @@
   },
   "homepage": "https://github.com/phuchnh/ngx-api-resource",
   "repository": "git@github.com:phuchnh/ngx-api-resource.git",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  },
   "keywords": [
     "angular",
     "typescript",
